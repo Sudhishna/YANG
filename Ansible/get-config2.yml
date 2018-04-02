@@ -1,6 +1,6 @@
 ---
 - name: configure devices with ansible-napalm
-  hosts: EX4200
+  hosts: QFX5200
   connection: local
   gather_facts: no
   tasks:

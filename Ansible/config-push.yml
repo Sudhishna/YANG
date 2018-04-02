@@ -1,13 +1,13 @@
 ---
 - name: configure devices with ansible-napalm
-  hosts: EX4200
+  hosts: QFX5200
   connection: local
   gather_facts: no
   tasks:
 
   - name: Import variables from the file /vars/interfaces_config.yml into 'info' variable
     include_vars:
-      file: "{{playbook_dir}}/data/ex4200_7.yml"
+      file: "{{playbook_dir}}/data/qfx5200.yml"
       name: info
 
   - name: get facts from device
