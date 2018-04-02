@@ -1,0 +1,10 @@
+---
+neighbors:
+   - interface: vme
+     name: ansible-defined-interface
+     local_ip: 10.85.87.134
+     mask: 27
+   - interface: et-0/0/1
+     name: ansible-defined-interface
+     local_ip: 192.168.210.13
+     mask: 30

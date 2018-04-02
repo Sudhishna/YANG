@@ -1,0 +1,42 @@
+---
+- name: configure devices with ansible-napalm
+  hosts: EX4200
+  connection: local
+  gather_facts: no
+  tasks:
+
+  - name: Import variables from the file /vars/interfaces_config.yml into 'info' variable
+    include_vars:
+      file: "{{playbook_dir}}/data/ex4200_7.yml"
+      name: info
+
+  - name: get facts from device
+    napalm_get_facts:
+      hostname: "{{ ip }}"
+      username: "ssendhil"
+      dev_os: "{{ os }}"
+    register: result
+
+  - name: Fetch Network ID
+    set_fact:
+      vendor: "{{ result.ansible_facts.napalm_facts.vendor }}"
+      vendor_os: "{% if result.ansible_facts.napalm_facts.vendor=='Juniper' %}junos{% elif result.ansible_facts.napalm_facts.vendor=='vendor2'%}vendor2{% else %}vendor3{% endif %}"
+  - debug:
+      msg:
+        - "{{ vendor }}"
+        - "{{ vendor_os }}"
+
+  - name: Render configuration for devices
+    template:
+      src: "{{playbook_dir}}/interfaces_template.j2"
+      dest: "{{playbook_dir}}/configs/{{ inventory_hostname }}.conf"
+
+  - name: Install rendered Config 
+    napalm_install_config:
+      hostname: "{{ ip }}"
+      username: "ssendhil"
+      dev_os: "{{ vendor_os }}"
+      config_file: "{{playbook_dir}}/configs/{{ inventory_hostname }}.conf"
+      commit_changes: "{{ commit_changes | default(True) }}"
+      replace_config: False
+      get_diffs: True

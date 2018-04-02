@@ -1,0 +1,19 @@
+---
+- name: configure devices with ansible-napalm
+  hosts: EX4200
+  connection: local
+  gather_facts: no
+  tasks:
+
+  - name: Parse from device
+    napalm_parse_yang:
+      hostname: "{{ ip }}"
+      username: "ssendhil"
+      dev_os: "{{ os }}"
+      mode: "config"
+      models:
+        - models.openconfig_interfaces
+    register: running
+  - debug:
+      msg:
+        - "{{ running }}"

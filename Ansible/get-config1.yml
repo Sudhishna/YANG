@@ -1,0 +1,22 @@
+---
+- name: configure devices with ansible-napalm
+  hosts: EX4200
+  connection: local
+  gather_facts: no
+  tasks:
+
+  - name: get facts from device
+    napalm_get_facts:
+      hostname: "{{ ip }}"
+      username: "ssendhil"
+      dev_os: "{{ os }}"
+      filter: ['facts','interfaces','bgp_neighbors','lldp_neighbors_detail','route_to']
+      args:
+        route_to:
+          protocol: static
+          destination: 8.8.8.8
+    register: result
+
+  - debug:
+      msg:
+        - "{{ result }}"
